@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professional Rehab Calculator - SC Edition</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .icon-box {
+            background: #667eea;
+            padding: 15px;
+            border-radius: 12px;
+        }
+
+        .icon {
+            width: 40px;
+            height: 40px;
+            color: white;
+        }
+
+        h1 {
+            font-size: 2rem;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 0.95rem;
+        }
+
+        .badge {
+            background: #10b981;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .section {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-size: 1.3rem;
+            color: #333;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #667eea;
+        }
+
+        .category-card {
+            background: #f9fafb;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .category-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .category-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .category-total {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #667eea;
+        }
+
+        .input-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .input-label {
+            font-size: 0.85rem;
+            color: #666;
+            font-weight: 500;
+        }
+
+        .input-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        input[type="number"], select {
+            padding: 10px 12px;
+            border: 2px solid #e5e7eb;
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: all 0.2s;
+            width: 100%;
+        }
+
+        input[type="number"]:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        select {
+            cursor: pointer;
+        }
+
+        .calculated-value {
+            background: #eff6ff;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-weight: 600;
+            color: #1e40af;
+            font-size: 0.95rem;
+        }
+
+        .breakdown-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .breakdown-row:last-child {
+            border-bottom: none;
+        }
+
+        .totals-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .total-card {
+            padding: 25px;
+            border-radius: 10px;
+        }
+
+        .total-card.labor {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            color: white;
+        }
+
+        .total-card.materials {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+        }
+
+        .total-card.grand {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .total-card h3 {
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            opacity: 0.9;
+        }
+
+        .total-card .amount {
+            font-size: 2.5rem;
+            font-weight: 700;
+        }
+
+        .total-card .detail {
+            font-size: 0.9rem;
+            margin-top: 8px;
+            opacity: 0.85;
+        }
+
+        .contingency-section {
+            background: #fff7ed;
+            border: 2px solid #fb923c;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .contingency-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .contingency-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #ea580c;
+        }
+
+        .contingency-controls {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .contingency-option {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .contingency-option input[type="radio"] {
+            width: auto;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 30px;
+        }
+
+        .btn {
+            padding: 15px 40px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-reset {
+            background: #ef4444;
+            color: white;
+        }
+
+        .btn-reset:hover {
+            background: #dc2626;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn-print {
+            background: #6366f1;
+            color: white;
+        }
+
+        .btn-print:hover {
+            background: #4f46e5;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .info-badge {
+            background: #dbeafe;
+            color: #1e40af;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        @media print {
+            body {
+                background: white;
+            }
+            .btn, .button-group {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.5rem;
+            }
+            .header-content {
+                flex-direction: column;
+                gap: 15px;
+            }
+            .input-grid {
+                grid-template-columns: 1fr;
+            }
+            .total-card .amount {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-content">
+                <div class="header-left">
+                    <div class="icon-box">
+                        <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <h1>Professional Rehab Calculator</h1>
+                        <p class="subtitle">Industry-standard estimating with material tiers & contingency planning (SC Market)</p>
+                    </div>
+                </div>
+                <div class="badge">PRO EDITION</div>
+            </div>
+        </div>
+
+        <!-- Categories -->
+        <div class="section">
+            <h2 class="section-title">Project Categories</h2>
+            <div id="categoriesContainer"></div>
+        </div>
+
+        <!-- Contingency -->
+        <div class="section">
+            <div class="contingency-section">
+                <div class="contingency-header">
+                    <span class="contingency-title">⚠️ Contingency Buffer (Industry Best Practice)</span>
+                    <span class="info-badge">Covers unexpected costs</span>
+                </div>
+                <div class="contingency-controls">
+                    <div class="contingency-option">
+                        <input type="radio" name="contingency" value="0" id="cont0" checked>
+                        <label for="cont0">None (0%)</label>
+                    </div>
+                    <div class="contingency-option">
+                        <input type="radio" name="contingency" value="10" id="cont10">
+                        <label for="cont10">Standard (10%)</label>
+                    </div>
+                    <div class="contingency-option">
+                        <input type="radio" name="contingency" value="15" id="cont15">
+                        <label for="cont15">Recommended (15%)</label>
+                    </div>
+                    <div class="contingency-option">
+                        <input type="radio" name="contingency" value="20" id="cont20">
+                        <label for="cont20">Conservative (20%)</label>
+                    </div>
+                </div>
+                <div class="breakdown-row" style="margin-top: 15px; padding-top: 15px; border-top: 2px solid #fb923c;">
+                    <span style="font-weight: 600;">Contingency Amount:</span>
+                    <span id="contingencyAmount" style="font-weight: 700; color: #ea580c;">$0</span>
+                </div>
+            </div>
+
+            <!-- Minimum Charge -->
+            <div class="contingency-section" style="background: #f0fdf4; border-color: #22c55e; margin-top: 20px;">
+                <div class="contingency-header">
+                    <span class="contingency-title" style="color: #16a34a;">💰 Minimum Job Charge</span>
+                    <span class="info-badge" style="background: #dcfce7; color: #166534;">Protects against small jobs</span>
+                </div>
+                <div class="contingency-controls">
+                    <div class="contingency-option">
+                        <input type="radio" name="minimum" value="0" id="min0" checked>
+                        <label for="min0">None</label>
+                    </div>
+                    <div class="contingency-option">
+                        <input type="radio" name="minimum" value="1500" id="min1500">
+                        <label for="min1500">$1,500</label>
+                    </div>
+                    <div class="contingency-option">
+                        <input type="radio" name="minimum" value="3500" id="min3500">
+                        <label for="min3500">$3,500</label>
+                    </div>
+                    <div class="contingency-option">
+                        <input type="radio" name="minimum" value="5000" id="min5000">
+                        <label for="min5000">$5,000</label>
+                    </div>
+                    <div class="contingency-option">
+                        <input type="radio" name="minimum" value="custom" id="minCustom">
+                        <label for="minCustom">Custom:</label>
+                        <div class="input-wrapper" style="margin-left: 5px;">
+                            <span>$</span>
+                            <input type="number" id="customMinimum" placeholder="0" min="0" style="width: 120px;" oninput="selectCustomMinimum()">
+                        </div>
+                    </div>
+                </div>
+                <div class="breakdown-row" id="minimumAppliedRow" style="margin-top: 15px; padding-top: 15px; border-top: 2px solid #22c55e; display: none;">
+                    <span style="font-weight: 600; color: #16a34a;">⚡ Minimum Charge Applied:</span>
+                    <span id="minimumAppliedAmount" style="font-weight: 700; color: #16a34a;">$0</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Totals -->
+        <div class="section">
+            <h2 class="section-title">Project Summary</h2>
+            <div class="totals-grid">
+                <div class="total-card labor">
+                    <h3>Total Labor</h3>
+                    <div class="amount" id="totalLabor">$0</div>
+                    <div class="detail">All labor costs combined</div>
+                </div>
+                <div class="total-card materials">
+                    <h3>Total Materials</h3>
+                    <div class="amount" id="totalMaterials">$0</div>
+                    <div class="detail">Includes waste factors</div>
+                </div>
+                <div class="total-card grand">
+                    <h3>Grand Total</h3>
+                    <div class="amount" id="grandTotal">$0</div>
+                    <div class="detail" id="grandTotalDetail">All costs + contingency</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Buttons -->
+        <div class="button-group">
+            <button class="btn btn-reset" onclick="resetCalculator()">Reset Calculator</button>
+            <button class="btn btn-print" onclick="window.print()">Print Estimate</button>
+        </div>
+    </div>
+
+    <script>
+        // SC-adjusted pricing (generally 10-15% below national averages)
+        const categories = {
+            demolition: {
+                name: 'Demolition',
+                type: 'simple',
+                description: 'Basic demo work'
+            },
+            foundation: {
+                name: 'Foundation',
+                type: 'sqft',
+                description: 'New foundation or major repairs',
+                options: [
+                    { value: 'slab', label: 'Slab', laborRate: 5.5, materialRate: 5.5 },
+                    { value: 'crawl', label: 'Crawl Space', laborRate: 8, materialRate: 10 },
+                    { value: 'basement', label: 'Basement', laborRate: 12, materialRate: 15 }
+                ]
+            },
+            kitchen: {
+                name: 'Kitchen Remodel',
+                type: 'sqft',
+                description: 'Full kitchen renovation',
+                options: [
+                    { value: 'standard', label: 'Standard', laborRate: 15, materialRate: 25 },
+                    { value: 'premium', label: 'Premium', laborRate: 20, materialRate: 40 },
+                    { value: 'luxury', label: 'Luxury', laborRate: 30, materialRate: 65 }
+                ]
+            },
+            bathroom: {
+                name: 'Bathroom',
+                type: 'simple',
+                description: 'Bathroom renovation'
+            },
+            bedroomAdditions: {
+                name: 'Bedroom Additions',
+                type: 'sqft',
+                description: 'New bedroom construction',
+                options: [
+                    { value: 'standard', label: 'Standard Finish', laborRate: 25, materialRate: 35 },
+                    { value: 'premium', label: 'Premium Finish', laborRate: 35, materialRate: 50 },
+                    { value: 'luxury', label: 'Luxury Finish', laborRate: 45, materialRate: 75 }
+                ]
+            },
+            newCabinets: {
+                name: 'New Cabinets',
+                type: 'linear',
+                description: 'Cabinet installation',
+                options: [
+                    { value: 'stock', label: 'Stock Cabinets', laborRate: 50, materialRate: 210 },
+                    { value: 'semi', label: 'Semi-Custom', laborRate: 60, materialRate: 320 },
+                    { value: 'custom', label: 'Custom', laborRate: 70, materialRate: 450 }
+                ],
+                wasteFactor: 1.05
+            },
+            refaceCabinets: {
+                name: 'Reface Cabinets',
+                type: 'linear',
+                description: 'Cabinet refacing',
+                options: [
+                    { value: 'basic', label: 'Basic Reface', laborRate: 35, materialRate: 65 },
+                    { value: 'premium', label: 'Premium Reface', laborRate: 45, materialRate: 95 }
+                ],
+                wasteFactor: 1.05
+            },
+            flooring: {
+                name: 'Flooring',
+                type: 'sqft',
+                description: 'Floor installation',
+                options: [
+                    { value: 'carpet', label: 'Carpet', laborRate: 2, materialRate: 2.5 },
+                    { value: 'vinyl', label: 'Vinyl/LVP', laborRate: 3, materialRate: 3.5 },
+                    { value: 'laminate', label: 'Laminate', laborRate: 3.5, materialRate: 4 },
+                    { value: 'hardwood', label: 'Hardwood', laborRate: 5, materialRate: 7 },
+                    { value: 'tile', label: 'Tile', laborRate: 6, materialRate: 5 }
+                ],
+                wasteFactor: 1.10
+            },
+            paint: {
+                name: 'Paint',
+                type: 'sqft',
+                description: 'Interior painting',
+                options: [
+                    { value: 'standard', label: 'Standard (1 coat)', laborRate: 1.5, materialRate: 0.5 },
+                    { value: 'premium', label: 'Premium (2 coats)', laborRate: 2.5, materialRate: 0.8 },
+                    { value: 'luxury', label: 'Luxury (2 coats + prep)', laborRate: 3.5, materialRate: 1.2 }
+                ],
+                wasteFactor: 1.15
+            },
+            trim: {
+                name: 'Trim & Molding',
+                type: 'sqft',
+                description: 'Baseboard, crown, etc.',
+                options: [
+                    { value: 'standard', label: 'Standard Trim', laborRate: 2, materialRate: 1.5 },
+                    { value: 'premium', label: 'Premium Trim', laborRate: 3, materialRate: 2.5 },
+                    { value: 'luxury', label: 'Custom Millwork', laborRate: 5, materialRate: 4 }
+                ]
+            },
+            appliances: {
+                name: 'Appliance Upgrade',
+                type: 'simple',
+                description: 'New appliances & installation'
+            },
+            windows: {
+                name: 'Windows',
+                type: 'simple',
+                description: 'Window replacement'
+            },
+            doors: {
+                name: 'Doors',
+                type: 'simple',
+                description: 'Door installation'
+            }
+        };
+
+        function createCategoryHTML(key, category) {
+            if (category.type === 'simple') {
+                return `
+                    <div class="category-card">
+                        <div class="category-header">
+                            <div>
+                                <div class="category-name">${category.name}</div>
+                                <div style="font-size: 0.85rem; color: #666;">${category.description}</div>
+                            </div>
+                            <div class="category-total" id="${key}-total">$0</div>
+                        </div>
+                        <div class="input-grid">
+                            <div class="input-group">
+                                <label class="input-label">Labor Cost</label>
+                                <div class="input-wrapper">
+                                    <span>$</span>
+                                    <input type="number" id="${key}-labor" placeholder="0" min="0" oninput="calculate()">
+                                </div>
+                            </div>
+                            <div class="input-group">
+                                <label class="input-label">Materials Cost</label>
+                                <div class="input-wrapper">
+                                    <span>$</span>
+                                    <input type="number" id="${key}-materials" placeholder="0" min="0" oninput="calculate()">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } else if (category.type === 'sqft') {
+                return `
+                    <div class="category-card">
+                        <div class="category-header">
+                            <div>
+                                <div class="category-name">${category.name}</div>
+                                <div style="font-size: 0.85rem; color: #666;">${category.description}</div>
+                            </div>
+                            <div class="category-total" id="${key}-total">$0</div>
+                        </div>
+                        <div class="input-grid">
+                            <div class="input-group">
+                                <label class="input-label">Square Footage</label>
+                                <input type="number" id="${key}-sqft" placeholder="0" min="0" oninput="calculate()">
+                            </div>
+                            ${category.options ? `
+                            <div class="input-group">
+                                <label class="input-label">Quality/Type</label>
+                                <select id="${key}-option" onchange="calculate()">
+                                    <option value="">Select...</option>
+                                    ${category.options.map((opt, idx) => 
+                                        `<option value="${idx}">${opt.label} ($${opt.laborRate + opt.materialRate}/sqft)</option>`
+                                    ).join('')}
+                                </select>
+                            </div>
+                            ` : `
+                            <div class="input-group">
+                                <label class="input-label">Labor Rate ($/sqft)</label>
+                                <div class="input-wrapper">
+                                    <span>$</span>
+                                    <input type="number" id="${key}-labor-rate" placeholder="0" min="0" step="0.1" oninput="calculate()">
+                                </div>
+                            </div>
+                            <div class="input-group">
+                                <label class="input-label">Material Rate ($/sqft)</label>
+                                <div class="input-wrapper">
+                                    <span>$</span>
+                                    <input type="number" id="${key}-material-rate" placeholder="0" min="0" step="0.1" oninput="calculate()">
+                                </div>
+                            </div>
+                            `}
+                        </div>
+                        <div class="breakdown-row" style="margin-top: 15px;">
+                            <span>Labor:</span>
+                            <span class="calculated-value" id="${key}-labor-calc">$0</span>
+                        </div>
+                        <div class="breakdown-row">
+                            <span>Materials ${category.wasteFactor ? `(+${Math.round((category.wasteFactor - 1) * 100)}% waste)` : ''}:</span>
+                            <span class="calculated-value" id="${key}-materials-calc">$0</span>
+                        </div>
+                    </div>
+                `;
+            } else if (category.type === 'linear') {
+                return `
+                    <div class="category-card">
+                        <div class="category-header">
+                            <div>
+                                <div class="category-name">${category.name}</div>
+                                <div style="font-size: 0.85rem; color: #666;">${category.description}</div>
+                            </div>
+                            <div class="category-total" id="${key}-total">$0</div>
+                        </div>
+                        <div class="input-grid">
+                            <div class="input-group">
+                                <label class="input-label">Linear Feet</label>
+                                <input type="number" id="${key}-linear" placeholder="0" min="0" oninput="calculate()">
+                            </div>
+                            ${category.options ? `
+                            <div class="input-group">
+                                <label class="input-label">Quality/Type</label>
+                                <select id="${key}-option" onchange="calculate()">
+                                    <option value="">Select...</option>
+                                    ${category.options.map((opt, idx) => 
+                                        `<option value="${idx}">${opt.label} ($${opt.laborRate + opt.materialRate}/LF)</option>`
+                                    ).join('')}
+                                </select>
+                            </div>
+                            ` : ''}
+                        </div>
+                        <div class="breakdown-row" style="margin-top: 15px;">
+                            <span>Labor:</span>
+                            <span class="calculated-value" id="${key}-labor-calc">$0</span>
+                        </div>
+                        <div class="breakdown-row">
+                            <span>Materials ${category.wasteFactor ? `(+${Math.round((category.wasteFactor - 1) * 100)}% waste)` : ''}:</span>
+                            <span class="calculated-value" id="${key}-materials-calc">$0</span>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        function formatCurrency(amount) {
+            return new Intl.NumberFormat('en-US', {
+                style: 'currency',
+                currency: 'USD',
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0
+            }).format(amount);
+        }
+
+        function parseValue(value) {
+            const num = parseFloat(value);
+            return isNaN(num) || num < 0 ? 0 : num;
+        }
+
+        function selectCustomMinimum() {
+            document.getElementById('minCustom').checked = true;
+            calculate();
+        }
+
+        function calculate() {
+            let totalLabor = 0;
+            let totalMaterials = 0;
+
+            Object.keys(categories).forEach(key => {
+                const category = categories[key];
+                let labor = 0;
+                let materials = 0;
+                let total = 0;
+
+                if (category.type === 'simple') {
+                    labor = parseValue(document.getElementById(`${key}-labor`)?.value);
+                    materials = parseValue(document.getElementById(`${key}-materials`)?.value);
+                    total = labor + materials;
+                } else if (category.type === 'sqft') {
+                    const sqft = parseValue(document.getElementById(`${key}-sqft`)?.value);
+                    
+                    if (category.options) {
+                        const optionSelect = document.getElementById(`${key}-option`);
+                        const selectedIdx = optionSelect?.value;
+                        
+                        if (selectedIdx !== '' && selectedIdx !== undefined) {
+                            const option = category.options[parseInt(selectedIdx)];
+                            labor = sqft * option.laborRate;
+                            materials = sqft * option.materialRate * (category.wasteFactor || 1);
+                        }
+                    } else {
+                        const laborRate = parseValue(document.getElementById(`${key}-labor-rate`)?.value);
+                        const materialRate = parseValue(document.getElementById(`${key}-material-rate`)?.value);
+                        labor = sqft * laborRate;
+                        materials = sqft * materialRate * (category.wasteFactor || 1);
+                    }
+                    
+                    total = labor + materials;
+                    
+                    if (document.getElementById(`${key}-labor-calc`)) {
+                        document.getElementById(`${key}-labor-calc`).textContent = formatCurrency(labor);
+                    }
+                    if (document.getElementById(`${key}-materials-calc`)) {
+                        document.getElementById(`${key}-materials-calc`).textContent = formatCurrency(materials);
+                    }
+                } else if (category.type === 'linear') {
+                    const linear = parseValue(document.getElementById(`${key}-linear`)?.value);
+                    
+                    if (category.options) {
+                        const optionSelect = document.getElementById(`${key}-option`);
+                        const selectedIdx = optionSelect?.value;
+                        
+                        if (selectedIdx !== '' && selectedIdx !== undefined) {
+                            const option = category.options[parseInt(selectedIdx)];
+                            labor = linear * option.laborRate;
+                            materials = linear * option.materialRate * (category.wasteFactor || 1);
+                        }
+                    }
+                    
+                    total = labor + materials;
+                    
+                    if (document.getElementById(`${key}-labor-calc`)) {
+                        document.getElementById(`${key}-labor-calc`).textContent = formatCurrency(labor);
+                    }
+                    if (document.getElementById(`${key}-materials-calc`)) {
+                        document.getElementById(`${key}-materials-calc`).textContent = formatCurrency(materials);
+                    }
+                }
+
+                if (document.getElementById(`${key}-total`)) {
+                    document.getElementById(`${key}-total`).textContent = total > 0 ? formatCurrency(total) : '$0';
+                }
+
+                totalLabor += labor;
+                totalMaterials += materials;
+            });
+
+            // Calculate contingency
+            const contingencyPercent = parseFloat(document.querySelector('input[name="contingency"]:checked')?.value || 0);
+            const subtotal = totalLabor + totalMaterials;
+            const contingencyAmount = subtotal * (contingencyPercent / 100);
+            let grandTotal = subtotal + contingencyAmount;
+
+            // Check minimum charge
+            const minimumRadio = document.querySelector('input[name="minimum"]:checked');
+            let minimumCharge = 0;
+            
+            if (minimumRadio) {
+                if (minimumRadio.value === 'custom') {
+                    minimumCharge = parseValue(document.getElementById('customMinimum')?.value);
+                } else {
+                    minimumCharge = parseFloat(minimumRadio.value);
+                }
+            }
+
+            const minimumApplied = minimumCharge > 0 && grandTotal > 0 && grandTotal < minimumCharge;
+            
+            if (minimumApplied) {
+                document.getElementById('minimumAppliedRow').style.display = 'flex';
+                document.getElementById('minimumAppliedAmount').textContent = formatCurrency(minimumCharge);
+                grandTotal = minimumCharge;
+            } else {
+                document.getElementById('minimumAppliedRow').style.display = 'none';
+            }
+
+            // Update displays
+            document.getElementById('totalLabor').textContent = formatCurrency(totalLabor);
+            document.getElementById('totalMaterials').textContent = formatCurrency(totalMaterials);
+            document.getElementById('contingencyAmount').textContent = formatCurrency(contingencyAmount);
+            document.getElementById('grandTotal').textContent = formatCurrency(grandTotal);
+            
+            if (minimumApplied) {
+                document.getElementById('grandTotalDetail').textContent = `Minimum charge applied ($${formatCurrency(minimumCharge).replace('$', '')})`;
+            } else if (contingencyPercent > 0) {
+                document.getElementById('grandTotalDetail').textContent = `Includes ${contingencyPercent}% contingency`;
+            } else {
+                document.getElementById('grandTotalDetail').textContent = 'All costs (no contingency)';
+            }
+        }
+
+        function resetCalculator() {
+            if (confirm('Are you sure you want to reset all values?')) {
+                document.querySelectorAll('input[type="number"]').forEach(input => input.value = '');
+                document.querySelectorAll('select').forEach(select => select.selectedIndex = 0);
+                document.getElementById('cont0').checked = true;
+                document.getElementById('min0').checked = true;
+                calculate();
+            }
+        }
+
+        // Initialize
+        window.onload = function() {
+            const container = document.getElementById('categoriesContainer');
+            Object.keys(categories).forEach(key => {
+                container.innerHTML += createCategoryHTML(key, categories[key]);
+            });
+            
+            // Add event listeners for contingency
+            document.querySelectorAll('input[name="contingency"]').forEach(radio => {
+                radio.addEventListener('change', calculate);
+            });
+            
+            // Add event listeners for minimum charge
+            document.querySelectorAll('input[name="minimum"]').forEach(radio => {
+                radio.addEventListener('change', calculate);
+            });
+            
+            calculate();
+        };
+    </script>
+</body>
+</html>
